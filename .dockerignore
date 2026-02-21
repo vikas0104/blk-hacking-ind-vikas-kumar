@@ -4,4 +4,3 @@ __pycache__
 .gitignore
 test/
 *.md
-.cursor/
