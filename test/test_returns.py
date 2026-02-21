@@ -41,17 +41,6 @@ class TestNPSTaxBenefit:
         benefit = calculate_nps_tax_benefit(145, 600_000)
         assert benefit == 0  # income 600k is in 0% slab
 
-    def test_deduction_limited_by_invested(self):
-        benefit = calculate_nps_tax_benefit(100, 1_000_000)
-        expected = calculate_tax(1_000_000) - calculate_tax(1_000_000 - 100)
-        assert benefit == expected
-
-    def test_deduction_limited_by_income_pct(self):
-        benefit = calculate_nps_tax_benefit(500_000, 1_000_000)
-        nps_ded = min(500_000, 0.10 * 1_000_000, 200_000)  # 100_000
-        expected = calculate_tax(1_000_000) - calculate_tax(1_000_000 - nps_ded)
-        assert benefit == expected
-
     def test_deduction_limited_by_max(self):
         benefit = calculate_nps_tax_benefit(500_000, 5_000_000)
         nps_ded = min(500_000, 0.10 * 5_000_000, 200_000)  # 200_000

@@ -1,3 +1,11 @@
+"""
+Each expense is represented as expense[i] = {date: t, amount: x};
+with 0 ≤ 𝑛 < 106
+, 0 ≤ i, j ≤ n, t ∈ {w: w is a string of characters indicating a date-time in a fixed
+format}, 𝑡𝑖 ≠ 𝑡𝑗
+, 𝑥 < 5 × 10^5
+).
+"""
 NPS_RATE = 0.0711
 INDEX_RATE = 0.1449
 DEFAULT_INFLATION = 0.055

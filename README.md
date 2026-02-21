@@ -25,6 +25,9 @@ The server starts on `http://localhost:5477`.
 # Build
 docker build -t blk-hacking-ind-vikas-kumar .
 
+# pull
+docker pull ntnxvikas/blk-hacking-ind-vikas-kumar
+
 # Run
 docker run -d -p 5477:5477 blk-hacking-ind-vikas-kumar
 ```
