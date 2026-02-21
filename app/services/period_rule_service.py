@@ -13,8 +13,8 @@ def _in_range(dt, start, end):
 
 def apply_q_rules(transactions, q_periods):
     """
-    If multiple q periods match, use the one with the latest start date.
-    Ties broken by earliest position in the original list.
+    If multiple q periods match: use the one that starts latest (start date is closest to
+    transaction date). If they start on the same date, use the first one in the list.
     """
     if not q_periods:
         return transactions
@@ -28,7 +28,7 @@ def apply_q_rules(transactions, q_periods):
             "idx": i,
         })
     # timespanp is epoch time
-    # so we sort by -epoch time and idx
+    # so we sort by descending start time and ascending idx
     indexed_q.sort(key=lambda x: (-x["start"].timestamp(), x["idx"]))
 
     result = []
@@ -47,7 +47,12 @@ def apply_q_rules(transactions, q_periods):
 
 def apply_p_rules(transactions, p_periods):
     """
-    All matching p periods stack -- their extras are summed.
+    When a transaction date falls within a p period (including start and end dates), add the p
+    period's extra amount to the remanent.
+    If multiple p periods match: add all their extra amounts together. p periods always add
+    to the remanent; they never replace it.
+    p is an addition to q rules which means if a transaction falls in q and then p, we apply
+    both.
     """
     if not p_periods:
         # print("no p periods, returning transactions as is")
@@ -75,8 +80,13 @@ def apply_p_rules(transactions, p_periods):
 
 def apply_k_grouping(transactions, k_periods):
     """
-    Each k period independently sums remanents of transactions within its range.
-    A transaction can belong to multiple k periods.
+    For each k period: sum up the remanent of all transactions whose dates fall between the
+    k period's start and end dates (including both).
+    • A transaction can belong to multiple k periods. Each k period calculates its sum
+    independently.
+    • Date ranges include both start and end dates.
+    • Any k range is within a calendar year and not spanning multiple years.
+
     """
     savings = []
     for kp in k_periods:
@@ -97,7 +107,8 @@ def apply_k_grouping(transactions, k_periods):
 
 
 def filter_transactions(transactions, q_periods, p_periods, k_periods):
-    """Full temporal filter pipeline: q -> p -> k.
+    """
+    Full filter pipeline: q -> p -> k.
 
     Returns valid (within at least one k period) and invalid transactions.
     """
