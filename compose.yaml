@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    image: blk-hacking-ind-vikas-kumar
+    ports:
+      - "5477:5477"
+    environment:
+      - PYTHONUNBUFFERED=1
